@@ -5,16 +5,20 @@ const {
   SystemProgram
 } = anchor.web3;
 describe("Solana-Voting-DApp", () => {
+
   /* Configure the client */
   const provider = anchor.Provider.env();
   anchor.setProvider(provider);
   const program = anchor.workspace.Solana-Voting-DApp;
+  
   const voteAccount = anchor.web3.Keypair.generate();
 
   it("Initializes with 0 Votes for Approve and Deny", async () => {
     console.log("Testing Initialize...");
     
-    /* The last element passed to RPC methods is always the transaction options. Because voteAccount is being created here, we are required to pass it as a signers array */
+    /* The last element passed to RPC methods is always the transaction options. 
+    Because voteAccount is being created here, 
+    we are required to pass it as a signers array */
     await program.rpc.initialize({
       accounts: {
         voteAccount: voteAccount.publicKey,
