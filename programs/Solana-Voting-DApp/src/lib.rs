@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("AmjsJBNZueExSeFWZ1RwcAuBnD3p7coprE63DiJ88s8p");
 /// We'll update our declare_id! later. Once we run `anchor build`, our Program ID can be found in /target/idl/Solana_Voting_DApp.json
 /// Moving on to the #[program] macro below, this is where we define our program.
 /// Each method inside here defines an RPC request handler which can be invoked by clients
