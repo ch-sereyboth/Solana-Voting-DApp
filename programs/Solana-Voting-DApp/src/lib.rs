@@ -1,15 +1,63 @@
 use anchor_lang::prelude::*;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+/// We'll update our declare_id! later. Once we run `anchor build`, our Program ID can be found in /target/idl/Solana_Voting_DApp.json
+/// Moving on to the #[program] macro below, this is where we define our program.
+/// Each method inside here defines an RPC request handler which can be invoked by clients
 
 #[program]
 pub mod solana_voting_d_app {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        let vote_account = &mut ctx.accounts.vote_account;
+        vote_account.approve = 0;
+        vote_account.deny = 0;
+        Ok(())
+    }
+    /// All account validation logic is handled below at the #[account(...)] macros, 
+    /// letting us just focus on the business logic
+    
+    pub fn vote_approve(ctx:Context<Vote>) -> Result<()> {
+        let vote_account = &mut ctx.accounts.vote_account;
+        vote_account.approve +=1;
+        Ok(())
+    }
+
+    pub fn vote_deny(ctx:Context<Vote>) -> Result<()> {
+        let vote_account = &mut ctx.accounts.vote_account;
+        vote_account.deny +=1;
         Ok(())
     }
 }
+/// The #[derive(Accounts)] macro specifies all the accounts that are required for a given instruction
+/// Here, we define two structs: Initialize and Vote
 
 #[derive(Accounts)]
-pub struct Initialize {}
+pub struct Initialize<'info> {
+    /// We mark vote_account with the init attribute, which creates a new account owned by the program
+    /// When using init, we must also provide:
+    /// payer, which funds the account creation
+    /// space, which defines how large the account should be
+    /// and the system_program which is required by the runtime
+    /// This enforces that our vote_account must be owned by the currently executing program, and that it should be deserialized to the VoteAccount struct below at #[account]
+    #[account(init, payer = user, space = 16+16)]
+    pub vote_account: Account<'info, VoteAccount>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+    
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct Vote<'info>{
+    #[account(mut)]
+    pub vote_account: Account<'info, VoteAccount>
+}
+
+#[account]
+pub struct VoteAccount{
+    pub approve: u64,
+    pub deny: u64,
+}
