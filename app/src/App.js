@@ -15,9 +15,11 @@ import { web3 } from "@project-serum/anchor";
 
 import Main from "./components/Main";
 
+import { Route, Routes, BrowserRouter} from 'react-router-dom';
+
 const localnet = "http://127.0.0.1:8899";
 // const devnet = clusterApiUrl("devnet");
-//const mainnet = clusterApiUrl("mainnet-beta");
+const mainnet = clusterApiUrl("mainnet-beta");
 const network = localnet;
 
 const wallets = [PhantomWalletAdapter()];
@@ -104,12 +106,14 @@ function AppWrappedWithProviders() {
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider>
-        <ConnectionProvider endpoint={network}>
-          <AppWrappedWithProviders />
-        </ConnectionProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+          <ThemeProvider theme={theme}>
+             <SnackbarProvider>
+              <ConnectionProvider endpoint={network}>
+                <AppWrappedWithProviders />
+              </ConnectionProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
   );
 }
+
+
